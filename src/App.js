@@ -1,11 +1,11 @@
-import Komponen from "./Materi/Komponen";
-import FunctionalComponent from "./Materi/Komponen/Pembahasan/FunctionalComponent";
+import Komponen from './Tugas/ClassComponent';
+import Props from './Tugas/Props';
 
 function App() {
   return (
     <div className="App">
-      <Komponen/>
-      <FunctionalComponent/>
+      <Props />
+      <Komponen />
     </div>
   );
 }
