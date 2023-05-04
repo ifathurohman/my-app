@@ -1,0 +1,9 @@
+body {
+  overflow: hidden; 
+}
+
+.background-image {
+    background: url(https://cdn.pixabay.com/photo/2015/08/28/11/37/painting-911804_960_720.jpg) no-repeat center center fixed;
+  background-size: cover;
+  border-radius: 0%;
+}

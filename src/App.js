@@ -1,11 +1,11 @@
-import Komponen from './Tugas/ClassComponent';
-import Props from './Tugas/Props';
+// import Komponen from './Tugas/ClassComponent';
+// import Props from './Tugas/Props';
+import Bootstrap from "./Tugas/bootstrap";
 
 function App() {
   return (
     <div className="App">
-      <Props />
-      <Komponen />
+      <Bootstrap />
     </div>
   );
 }
