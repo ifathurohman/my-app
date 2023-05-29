@@ -2,15 +2,14 @@
 // import Props from './Tugas/Props';
 // import Bootstrap from "./Tugas/bootstrap";
 // import Form from "./Tugas/form";
-
-// import PropTypes from 'prop-types';
-import Lifecycle from './Tugas/lifecycleComponent';
+// import Lifecycle from './Tugas/lifecycleComponent';
+import Routingtest from './Tugas/routing';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Lifecycle />
+      <Routingtest />
     </div>
   );
 }

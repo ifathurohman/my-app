@@ -1,31 +1,47 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 import * as B from 'react-bootstrap';
-import {v4} from 'uuid';
 
+import ReactPaginate from 'react-paginate';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './custom.css';
 
+import {format} from 'date-fns';
+
 const API_KEY = '59c7f98243a548a09c7eb2566b123b87';
+const PER_PAGE = 6;
 
 export default function Lifecycle() {
   const [inputValue, setInputValue] = useState('');
   const [data, setData] = useState([]);
 
+  const [pageCount, setPageCount] = useState(0);
+
   function searchData() {
     hitApi(
-      `https://newsapi.org/v2/everything?q=${inputValue}&sortBy=popularity&apiKey=${API_KEY}`,
+      `https://newsapi.org/v2/everything?q=${inputValue}&sortBy=popularity&apiKey=${API_KEY}&page=1&pageSize=${PER_PAGE}`,
     );
   }
 
   function hitApi(fullUrl) {
     axios.get(fullUrl).then(res => {
       setData(res.data.articles);
+      console.log(res.data);
+      setPageCount(Math.ceil(res.data.totalResults / PER_PAGE));
     });
   }
 
+  function handlePageClick(e) {
+    const selectedPage = e.selected;
+    hitApi(
+      `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}&page=${selectedPage}&pageSize=${PER_PAGE}`,
+    );
+  }
+
   useEffect(() => {
-    hitApi(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
+    hitApi(
+      `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}&page=1&pageSize=${PER_PAGE}`,
+    );
   }, []);
 
   return (
@@ -82,42 +98,60 @@ export default function Lifecycle() {
                 Search
               </B.Button>
             </B.Form>
+
             <B.Row>
-              {data.map(article => (
-                <B.Card key={v4()} style={{width: '30%'}} className="m-3 p-3">
+              {data.map((article, index) => (
+                <B.Card key={index} style={{width: '30%'}} className="m-3 p-3">
                   <B.Card.Img
                     style={{maxHeight: '50vh'}}
-                    key={v4()}
                     variant="top"
                     src={article.urlToImage}
                   />
                   <B.Card.Body>
-                    <B.Card.Title key={v4()}>{article.title}</B.Card.Title>
-                    <B.Card.Text key={v4()}>{article.description}</B.Card.Text>
+                    <B.Card.Title>{article.title}</B.Card.Title>
+                    <B.Card.Text>{article.description}</B.Card.Text>
                   </B.Card.Body>
                   <B.ListGroup className="list-group-flush">
-                    <B.ListGroup.Item key={v4()}>
-                      {article.author}
-                    </B.ListGroup.Item>
-                    <B.ListGroup.Item key={v4()}>
-                      {article.publishedAt}
+                    <B.ListGroup.Item>{article.author}</B.ListGroup.Item>
+                    <B.ListGroup.Item>
+                      {format(new Date(article.publishedAt), 'd MMM y, H:m')}
                     </B.ListGroup.Item>
                   </B.ListGroup>
-                  <B.Button key={v4()} href={article.url}>
-                    Detail
-                  </B.Button>
+                  <B.Button href={article.url}>Detail</B.Button>
                 </B.Card>
               ))}
               {data.length < 1 && (
                 <p style={{textAlign: 'center', fontSize: '50px'}}>Loading..</p>
               )}
             </B.Row>
+
+            <ReactPaginate
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
+              pageCount={pageCount}
+              previousLabel="< previous"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              renderOnZeroPageCount={null}
+            />
           </B.Container>
         </B.Card.Body>
         <B.Card.Footer className="bg-dark text-muted center">
           © 2023
         </B.Card.Footer>
       </B.Card>
+         
     </div>
   );
 }
